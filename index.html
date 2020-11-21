@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous">
+  <link rel="stylesheet" href="style.css">
+  <title>Weather app</title>
+</head>
+<body>
+  <div class="app">
+    <h1>Weather app</h1>
+    <input type="text" class="location-input" placeholder="E.g. Gothenburg, Stockholm">
+    <i class="fas fa-search input__search"></i>
+    <div class="current">
+      <h2 class="current__location"></h2>
+      <h3 class="section-title"></h3>
+      <div class="current__stats">
+        <div class="stats__temp">
+          <p class="temp__display"></p>
+          <p class="temp__state"></p>
+        </div>
+        <div class="stats__other">
+          <div class="stats__other-item">
+            <p class="item-stat highest-temp"></p>
+            <div class="item-property">Highest</div>
+          </div>
+          <div class="stats__other-item">
+            <p class="item-stat windspeed"></p>
+            <div class="item-property">Wind</div>
+          </div>
+          <div class="stats__other-item">
+            <p class="item-stat sunrise"></p>
+            <div class="item-property">Sunrise</div>
+          </div>
+          <div class="stats__other-item">
+            <p class="item-stat lowest-temp"></p>
+            <div class="item-property">Lowest</div>
+          </div>
+          <div class="stats__other-item">
+            <p class="item-stat rainpercentage"></p>
+            <div class="item-property">Humidity</div>
+          </div>
+          <div class="stats__other-item">
+            <p class="item-stat sunset"></p>
+            <div class="item-property">Sunset</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="forecast">
+      <h3 class="section-title">Forecast</h3>
+      <div class="forecast__list">
+        <div class="forecast__list-item">
+          <p class="forecast__day"></p>
+          <div class="icon-container"></div>
+          <p class="forecast__temp"></p>
+        </div>
+        <div class="forecast__list-item">
+          <p class="forecast__day"></p>
+          <div class="icon-container"></div>
+          <p class="forecast__temp"></p>
+        </div>
+        <div class="forecast__list-item">
+          <p class="forecast__day"></p>
+          <div class="icon-container"></div>
+          <p class="forecast__temp"></p>
+        </div>
+        <div class="forecast__list-item">
+          <p class="forecast__day"></p>
+          <div class="icon-container"></div>
+          <p class="forecast__temp"></p>
+        </div>
+        <div class="forecast__list-item">
+          <p class="forecast__day"></p>
+          <div class="icon-container"></div>
+          <p class="forecast__temp"></p>
+        </div>
+        <div class="forecast__list-item">
+          <p class="forecast__day"></p>
+          <div class="icon-container"></div>
+          <p class="forecast__temp"></p>
+        </div>
+        <div class="forecast__list-item">
+          <p class="forecast__day"></p>
+          <div class="icon-container"></div>
+          <p class="forecast__temp"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="index.js" type="module"></script>
+</body>
+</html>

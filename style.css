@@ -1,0 +1,115 @@
+:root {
+  --heading-font: 'Abel', sans-serif;
+  --body-font: 'Ubuntu', sans-serif;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: var(--heading-font);
+  color: white;
+}
+.app {
+  position: relative;
+  width: 60%;
+  margin: 1rem auto;
+  padding: 1rem;
+  background: linear-gradient(0deg, rgba(30,0,54,1) 0%, rgba(121,9,114,1) 22%, rgba(143,0,255,1) 100%);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.location-input {
+  align-self: center;
+  width: 40%;
+  margin-top: 3rem;
+  font-size: 2rem;
+  border: none;
+  padding: .5rem;
+  background-color: rgba(255, 255, 255, .2);
+  border-bottom: 2px solid #f5f5f5;
+  color: #f5f5f5;
+  outline: none;
+}
+.location-input::placeholder {
+  color: #bbb;
+  font-family: var(--heading-font);
+}
+.location-input:focus {
+  outline: none;
+  border-bottom: 2px solid red;
+}
+.input__search {
+  position: absolute;
+  top: 122px;
+  left: 66.5%;
+  font-size: 1.3rem;
+}
+.input__search:hover {
+  cursor: pointer;
+}
+.current {
+  margin: 3rem 0 1rem 0;
+}
+
+.current__location {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  height: 3rem;
+}
+.section-title {
+  font-size: 1.5rem;
+  font-family: var(--body-font);
+}
+.current__stats {
+  width: 100%;
+  height: 350px;
+  display: flex;
+}
+.stats__temp {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #f5f5f5;
+  width: 50%;
+  font-size: 5rem;
+}
+.temp__state {
+  font-size: 2rem;
+  font-family: var(--body-font);
+}
+.stats__other {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  width: 50%;
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+.stats__other-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+}
+.forecast__list {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+}
+.forecast__list-item {
+  font-size: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+}
