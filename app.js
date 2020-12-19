@@ -125,11 +125,11 @@ const App = (function() {
     currentLocationEl.textContent = "Current position";
     currentWeatherEl.innerHTML = `${getIcon(current.weather[0].icon)}${kelvinToCelsius(current.feels_like)}`;
     tempStateEl.textContent = `${current.weather[0].description.toUpperCase()}`;
-    highestTempEl.textContent = "Missing";
-    lowestTempEl.textContent = "Missing";
+    highestTempEl.textContent = "Missing data".italics();
+    lowestTempEl.textContent = "Missing data".italics();
     windspeedEl.textContent = `${current.wind_speed}mph`;
     rainEl.textContent = `${current.humidity}`;
-    sunriseEl.textContent = `${date.getTime(current.sunrise * 1000)};` // * 1000 to convert from unix timestamp
+    sunriseEl.textContent = `${date.getTime(current.sunrise * 1000)}`; // * 1000 to convert from unix timestamp
     sunsetEl.textContent = `${date.getTime(current.sunset * 1000)}`; // * 1000 to convert from unix timestamp
     setForecastValues(data);
   }
