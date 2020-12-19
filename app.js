@@ -5,10 +5,11 @@ const App = (function() {
   // https://openweathermap.org/api/one-call-api
 
   // DOM caching:
-
   const API_KEY_WEATHER = "176e50afdbf38f07708bd670b0317aa6";
   const URL_WEATHER = `https://api.openweathermap.org/data/2.5/weather?appid=${API_KEY_WEATHER}&q=`;
   const URL_WEATHER_FORECAST = `https://api.openweathermap.org/data/2.5/onecall`;
+  const appEl = document.querySelector(".app");
+  const spinnerEl = document.querySelector(".spinner");
   const inputEl = document.querySelector(".location-input");
   const buttonEl = document.querySelector(".input__search");
   const currentLocationEl = document.querySelector(".current__location");
@@ -22,6 +23,10 @@ const App = (function() {
   const rainEl = document.querySelector(".rainpercentage");
   const sunsetEl = document.querySelector(".sunset");
   const forecastItems = [...document.querySelector(".forecast__list").children];
+  const tempContainerEl = document.querySelector(".temp-container");
+  const fbuttonEl = document.querySelector(".f-temp");
+  const cbuttonEl = document.querySelector(".c-temp")
+
 
   // Utility functions:
 
@@ -40,7 +45,7 @@ const App = (function() {
     }
   })();
 
-// Methods for converting Date object properties to the correct format:
+  // Methods for converting Date object properties to the correct format:
   const date = (function() {
     const dateObject = new Date;
     return {
@@ -101,32 +106,58 @@ const App = (function() {
     return Math.round(temp - 273.15);
   }
 
+  const kelvinToFahrenheit = function(temp) {
+    return Math.round(temp * 9 / 5 - 459.69);
+  }
+
+  const tempControl = function(temp) {
+    return cbuttonEl.classList.contains("active") ? kelvinToCelsius(temp) : kelvinToFahrenheit(temp)
+  }
+
+  const unitControl = function() {
+    return cbuttonEl.classList.contains("active") ? "C" : "F";
+  }
+
   const getIcon = function(data) {
     return `<img src="https://openweathermap.org/img/wn/${data}@2x.png" alt="Weather icon">`
+  }
+
+  // Remove loading spinner and show data:
+  const onSuccesfulLoad = function() {
+    appEl.classList.add("loaded");
+    spinnerEl.classList.add("loaded");
+  }
+  
+  // Initiate spinner after new search:
+  const initiateSpinner = function() {
+    appEl.classList.remove("loaded");
+    spinnerEl.classList.remove("loaded");
   }
 
   // Output for the fetched data to document:
 
   const setValues = function(data, fetchOneCallAPI) {
+    onSuccesfulLoad()
     currentLocationEl.textContent = `${data.name}, ${data.sys.country}`;
-    currentWeatherEl.innerHTML = `${getIcon(data.weather[0].icon)}${kelvinToCelsius(data.main.temp)}°`;
+    currentWeatherEl.innerHTML = `${getIcon(data.weather[0].icon)}${tempControl(data.main.temp)}°${unitControl()}`;
     tempStateEl.textContent = `${data.weather[0].description.toUpperCase()}`;
-    highestTempEl.textContent = `${kelvinToCelsius(data.main.temp_max)}°`;
-    lowestTempEl.textContent = `${kelvinToCelsius(data.main.temp_min)}°`;
+    highestTempEl.textContent = `${tempControl(data.main.temp_max)}°${unitControl()}`;
+    lowestTempEl.textContent = `${tempControl(data.main.temp_min)}°${unitControl()}`;
     windspeedEl.textContent = `${data.wind.speed}mph`;
     rainEl.textContent = `${data.main.humidity}%`;
     sunriseEl.textContent = `${date.getTime(data.sys.sunrise * 1000)}`; // * 1000 to convert from unix timestamp
     sunsetEl.textContent = `${date.getTime(data.sys.sunset * 1000)}`;  // * 1000 to convert from unix timestamp
     fetchOneCallAPI(data);
   }
-
+  
   const setValuesForNavigator = function(data) {
     const { current } = data
+    onSuccesfulLoad()
     currentLocationEl.textContent = "Current position";
-    currentWeatherEl.innerHTML = `${getIcon(current.weather[0].icon)}${kelvinToCelsius(current.feels_like)}`;
+    currentWeatherEl.innerHTML = `${getIcon(current.weather[0].icon)}${tempControl(current.feels_like)}°${unitControl()}`;
     tempStateEl.textContent = `${current.weather[0].description.toUpperCase()}`;
-    highestTempEl.textContent = "Missing data".italics();
-    lowestTempEl.textContent = "Missing data".italics();
+    highestTempEl.innerHTML = "Missing data".italics();
+    lowestTempEl.innerHTML = "Missing data".italics();
     windspeedEl.textContent = `${current.wind_speed}mph`;
     rainEl.textContent = `${current.humidity}`;
     sunriseEl.textContent = `${date.getTime(current.sunrise * 1000)}`; // * 1000 to convert from unix timestamp
@@ -139,7 +170,7 @@ const App = (function() {
       let unixToDate = new Date(data.daily[index + 1].dt * 1000);
       item.children[0].textContent = date.getWeekDay(unixToDate)
       item.children[1].innerHTML = getIcon(data.daily[index + 1].weather[0].icon);
-      item.children[2].textContent = `${kelvinToCelsius(data.daily[index + 1].temp.day)}°`;
+      item.children[2].textContent = `${kelvinToCelsius(data.daily[index + 1].temp.day)}°${unitControl()}`;
     })
   }
 
@@ -151,11 +182,12 @@ const App = (function() {
     .then(response => response.json())
     .then(data => setValues(data, fetchWeatherForecast))
     .catch(err => alert("Location not found, try again :)"))
-    inputEl.value = "";
+    locationObj.resetLocation();
   }
 
   // Open Weather Map, One Call API:
   const fetchWeatherForecast = function(data) {
+
     const FORECAST_QUERY = `?lat=${data.coord.lat}&lon=${data.coord.lon}&exclude=minutely,hourly,alerts&appid=${API_KEY_WEATHER}`
     fetch(`${URL_WEATHER_FORECAST}${FORECAST_QUERY}`)
     .then(response => response.json())
@@ -164,6 +196,7 @@ const App = (function() {
 
   // Fetch One Call API using coords from Navigator.Geolocation API:
   const fetchWeatherWithCoords = function() {
+    appEl.innerHTML = `<h1>Weather App</h1><div class="spinner"></div>`;
     navigator.geolocation.getCurrentPosition(function(position) {
       const { latitude, longitude } = position.coords
       const FORECAST_QUERY = `?lat=${latitude}&lon=${longitude}&exclude=minutely,hourly,alerts&appid=${API_KEY_WEATHER}`
@@ -177,13 +210,25 @@ const App = (function() {
 
   const fetchEvent = function(event) {
     if (event.key === "Enter") {
+      initiateSpinner()
       fetchWeather();
     }
   }
-
+  
   const setListeners = function() {
-    buttonEl.addEventListener("click", fetchWeather)
-    inputEl.addEventListener("keypress", fetchEvent)
+    buttonEl.addEventListener("click", function() {
+      initiateSpinner()
+      fetchWeather()
+    })
+    inputEl.addEventListener("keypress", fetchEvent);
+    fbuttonEl.addEventListener("click", function() {
+      fbuttonEl.classList.add("active");
+      cbuttonEl.classList.remove("active");
+    })
+    cbuttonEl.addEventListener("click", function() {
+      cbuttonEl.classList.add("active");
+      fbuttonEl.classList.remove("active");
+    })
   }
 
   // Onload init:
@@ -191,13 +236,13 @@ const App = (function() {
   const init = function() {
     setListeners();
     dateEl.textContent = date.displayDate();
-
+    
     // If server uses HTTPS, use Navigator API to fetch coords and use coords to fetch all displayed data from One Call API:
     location.protocol === "https:" ? fetchWeatherWithCoords() : fetchWeather(locationObj.getDefaultLocation);
   }
 
   return {
-    init,
+    init
   }
 })();
 
