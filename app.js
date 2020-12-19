@@ -23,7 +23,6 @@ const App = (function() {
   const rainEl = document.querySelector(".rainpercentage");
   const sunsetEl = document.querySelector(".sunset");
   const forecastItems = [...document.querySelector(".forecast__list").children];
-  const tempContainerEl = document.querySelector(".temp-container");
   const fbuttonEl = document.querySelector(".f-temp");
   const cbuttonEl = document.querySelector(".c-temp")
 
@@ -196,7 +195,6 @@ const App = (function() {
 
   // Fetch One Call API using coords from Navigator.Geolocation API:
   const fetchWeatherWithCoords = function() {
-    appEl.innerHTML = `<h1>Weather App</h1><div class="spinner"></div>`;
     navigator.geolocation.getCurrentPosition(function(position) {
       const { latitude, longitude } = position.coords
       const FORECAST_QUERY = `?lat=${latitude}&lon=${longitude}&exclude=minutely,hourly,alerts&appid=${API_KEY_WEATHER}`
