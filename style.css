@@ -1,6 +1,6 @@
 :root {
-  --heading-font: 'Abel', sans-serif;
-  --body-font: 'Ubuntu', sans-serif;
+  --heading-font: "Abel", sans-serif;
+  --body-font: "Ubuntu", sans-serif;
 }
 * {
   margin: 0;
@@ -14,22 +14,27 @@ body {
 .app {
   position: relative;
   width: 60%;
-  margin: 1rem auto;
+  margin: 0.5rem auto;
   padding: 1rem;
-  background: linear-gradient(0deg, rgba(30,0,54,1) 0%, rgba(121,9,114,1) 22%, rgba(143,0,255,1) 100%);
+  background: linear-gradient(
+    0deg,
+    rgba(30, 0, 54, 1) 0%,
+    rgba(121, 9, 114, 1) 22%,
+    rgba(143, 0, 255, 1) 100%
+  );
   border-radius: 10px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  height: 950px;
 }
 .location-input {
   align-self: center;
   width: 40%;
-  margin-top: 3rem;
   font-size: 2rem;
   border: none;
-  padding: .5rem;
-  background-color: rgba(255, 255, 255, .2);
+  padding: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.2);
   border-bottom: 2px solid #f5f5f5;
   color: #f5f5f5;
   outline: none;
@@ -44,17 +49,13 @@ body {
 }
 .input__search {
   position: absolute;
-  top: 122px;
+  top: 97px;
   left: 66.5%;
   font-size: 1.3rem;
 }
 .input__search:hover {
   cursor: pointer;
 }
-.current {
-  margin: 3rem 0 1rem 0;
-}
-
 .current__location {
   font-size: 3rem;
   margin-bottom: 1rem;
@@ -112,4 +113,58 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
+}
+.temp-container {
+  text-align: center;
+}
+.c-temp,
+.f-temp {
+  background: linear-gradient(
+    0deg,
+    rgba(121, 9, 114, 1) 0%,
+    rgba(143, 0, 255, 1) 100%
+  );
+  border: 1px solid black;
+  border-radius: 4px;
+  color: white;
+  height: 30px;
+  width: 30px;
+  /* margin: 0 0.5rem; */
+}
+.c-temp:focus,
+.f-temp:focus {
+  outline: none;
+}
+.spinner {
+  position: absolute;
+  top: 49%;
+  left: 49%;
+  height: 50px;
+  width: 50px;
+  border: 10px solid lightgray;
+  border-radius: 50%;
+  border-top: 10px solid blue;
+  animation: spin 1s linear infinite;
+}
+
+.app > :not(:first-child):not(.spinner) {
+  display: none;
+}
+.app.loaded > :not(:first-child):not(.spinner) {
+  display: block;
+}
+.spinner.loaded {
+  display: none;
+}
+
+.c-temp.active,
+.f-temp.active {
+  transform: scale(1.1);
+  border: 1px solid white;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
