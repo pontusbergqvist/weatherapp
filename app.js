@@ -6,8 +6,8 @@ const App = (function() {
 
   // DOM caching:
 
-  const API_KEY_WEATHER = "176e50afdbf38f07708bd670b0317aa6"
-  const URL_WEATHER = `https://api.openweathermap.org/data/2.5/weather?appid=${API_KEY_WEATHER}&q=`
+  const API_KEY_WEATHER = "176e50afdbf38f07708bd670b0317aa6";
+  const URL_WEATHER = `https://api.openweathermap.org/data/2.5/weather?appid=${API_KEY_WEATHER}&q=`;
   const URL_WEATHER_FORECAST = `https://api.openweathermap.org/data/2.5/onecall`;
   const inputEl = document.querySelector(".location-input");
   const buttonEl = document.querySelector(".input__search");
@@ -28,15 +28,15 @@ const App = (function() {
   // Input location, input reset and default location for onload call:
   const locationObj = (function() {
     return {
-      getLocation: function() {
+      getLocation() {
         return inputEl.value;
       },
-      resetLocation: function() { 
+      resetLocation() { 
         inputEl.value = "";
       }, 
-      defaultLocation: function() {
-        return "mölnlycke";
-      }
+      getDefaultLocation() {
+        return "Mölnlycke"
+      },
     }
   })();
 
@@ -44,61 +44,54 @@ const App = (function() {
   const date = (function() {
     const dateObject = new Date;
     return {
-      getWeekDay: function(obj = dateObject) {
-        if (obj.getDay() === 0) {
-          return "Sunday"
-        } else if (obj.getDay() === 1) {
-          return "Monday"
-        } else if (obj.getDay() === 2) {
-          return "Tuesday"
-        } else if (obj.getDay() === 3) {
-          return "Wednesday"
-        } else if (obj.getDay() === 4) {
-          return "Thursday"
-        } else if (obj.getDay() === 5) {
-          return "Friday"
-        } else {
-          return "Saturday"
+      getWeekDay(obj = dateObject) {
+        const week = {
+          Sunday: 0,
+          Monday: 1,
+          Tuesday: 2,
+          Wednesday: 3,
+          Thursday: 4,
+          Friday: 5,
+          Saturday: 6 
+        }
+        for (let day in week) {
+          if (week[day] === obj.getDay()) {
+            return day;
+          }
         }
       },
-      getDay: function() {
+      getDay() {
         return dateObject.getDate()
       },
-      getMonth: function(object = dateObject) {
-        if (object.getMonth() === 0) {
-          return "January"
-        } else if (object.getMonth() === 1) {
-          return "February"
-        } else if (object.getMonth() === 2) {
-          return "Mars"
-        } else if (object.getMonth() === 3) {
-          return "April"
-        } else if (object.getMonth() === 4) {
-          return "May"
-        } else if (object.getMonth() === 5) {
-          return "June"
-        } else if (object.getMonth() === 6) {
-          return "July"
-        } else if (object.getMonth() === 7) {
-          return "August"
-        } else if (object.getMonth() === 8) {
-          return "September"
-        } else if (object.getMonth() === 9) {
-          return "October"
-        } else if (object.getMonth() === 10) {
-          return "November"
-        } else {
-          return "December"
+      getMonth(obj = dateObject) {
+        const year = {
+          January: 0,
+          February: 1,
+          Mars: 2,
+          April: 3,
+          May: 4,
+          June: 5,
+          July: 6,
+          August: 7,
+          September: 8,
+          October: 9,
+          November: 10,
+          December: 11
+        };
+        for (let month in year) {
+          if (year[month] === obj.getMonth()) {
+            return month;
+          }
         }
-      }, 
-      getTime: function(ms) {
+      },
+      getTime(ms) {
         let result = String(new Date(ms));
         return result.split(" ")[4].split(":").slice(0, 2).join(":");
       }, 
-      getIndex: function() {
+      getIndex() {
         return dateObject.getDay();
       },
-      displayDate: function() {
+      displayDate() {
         return `${date.getWeekDay()}, ${date.getDay()} ${date.getMonth()}`
       }
     }
@@ -114,7 +107,7 @@ const App = (function() {
 
   // Output for the fetched data to document:
 
-  const setValues = function(data, cb) {
+  const setValues = function(data, fetchOneCallAPI) {
     currentLocationEl.textContent = `${data.name}, ${data.sys.country}`;
     currentWeatherEl.innerHTML = `${getIcon(data.weather[0].icon)}${kelvinToCelsius(data.main.temp)}°`;
     tempStateEl.textContent = `${data.weather[0].description.toUpperCase()}`;
@@ -124,9 +117,23 @@ const App = (function() {
     rainEl.textContent = `${data.main.humidity}%`;
     sunriseEl.textContent = `${date.getTime(data.sys.sunrise * 1000)}`; // * 1000 to convert from unix timestamp
     sunsetEl.textContent = `${date.getTime(data.sys.sunset * 1000)}`;  // * 1000 to convert from unix timestamp
-    cb(data);
+    fetchOneCallAPI(data);
   }
 
+  const setValuesForNavigator = function(data) {
+    const { current } = data
+    currentLocationEl.textContent = "Current position";
+    currentWeatherEl.innerHTML = `${getIcon(current.weather[0].icon)}${kelvinToCelsius(current.feels_like)}`;
+    tempStateEl.textContent = `${current.weather[0].description.toUpperCase()}`;
+    highestTempEl.textContent = "Missing";
+    lowestTempEl.textContent = "Missing";
+    windspeedEl.textContent = `${current.wind_speed}mph`;
+    rainEl.textContent = `${current.humidity}`;
+    sunriseEl.textContent = `${date.getTime(current.sunrise * 1000)};` // * 1000 to convert from unix timestamp
+    sunsetEl.textContent = `${date.getTime(current.sunset * 1000)}`; // * 1000 to convert from unix timestamp
+    setForecastValues(data);
+  }
+  
   const setForecastValues = function(data) {
     forecastItems.forEach((item, index) => {
       let unixToDate = new Date(data.daily[index + 1].dt * 1000);
@@ -149,10 +156,21 @@ const App = (function() {
 
   // Open Weather Map, One Call API:
   const fetchWeatherForecast = function(data) {
-    const FORECAST_QUERY = `?lat=${data.coord.lat}&lon=${data.coord.lon}&exclude=current,minutely,hourly,alerts&appid=${API_KEY_WEATHER}`
+    const FORECAST_QUERY = `?lat=${data.coord.lat}&lon=${data.coord.lon}&exclude=minutely,hourly,alerts&appid=${API_KEY_WEATHER}`
     fetch(`${URL_WEATHER_FORECAST}${FORECAST_QUERY}`)
     .then(response => response.json())
     .then(data => setForecastValues(data));
+  }
+
+  // Fetch One Call API using coords from Navigator.Geolocation API:
+  const fetchWeatherWithCoords = function() {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      const { latitude, longitude } = position.coords
+      const FORECAST_QUERY = `?lat=${latitude}&lon=${longitude}&exclude=minutely,hourly,alerts&appid=${API_KEY_WEATHER}`
+      fetch(`${URL_WEATHER_FORECAST}${FORECAST_QUERY}`)
+      .then(response => response.json())
+      .then(data => setValuesForNavigator(data))
+    })
   }
 
   // Event listeners: 
@@ -173,11 +191,13 @@ const App = (function() {
   const init = function() {
     setListeners();
     dateEl.textContent = date.displayDate();
-    fetchWeather(locationObj.defaultLocation); // Shows weather data for Mölnlycke by default
+
+    // If server uses HTTPS, use Navigator API to fetch coords and use coords to fetch all displayed data from One Call API:
+    location.protocol === "htttps:" ? fetchWeatherWithCoords() : fetchWeather(locationObj.getDefaultLocation)
   }
 
   return {
-    init
+    init,
   }
 })();
 
