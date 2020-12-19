@@ -193,7 +193,7 @@ const App = (function() {
     dateEl.textContent = date.displayDate();
 
     // If server uses HTTPS, use Navigator API to fetch coords and use coords to fetch all displayed data from One Call API:
-    location.protocol === "htttps:" ? fetchWeatherWithCoords() : fetchWeather(locationObj.getDefaultLocation)
+    location.protocol === "https:" ? fetchWeatherWithCoords() : fetchWeather(locationObj.getDefaultLocation);
   }
 
   return {
