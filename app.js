@@ -57,7 +57,7 @@ const App = (function() {
           Thursday: 4,
           Friday: 5,
           Saturday: 6 
-        }
+        };
         for (let day in week) {
           if (week[day] === obj.getDay()) {
             return day;
@@ -65,7 +65,7 @@ const App = (function() {
         }
       },
       getDay() {
-        return dateObject.getDate()
+        return dateObject.getDate();
       },
       getMonth(obj = dateObject) {
         const year = {
@@ -96,7 +96,7 @@ const App = (function() {
         return dateObject.getDay();
       },
       displayDate() {
-        return `${date.getWeekDay()}, ${date.getDay()} ${date.getMonth()}`
+        return `${date.getWeekDay()}, ${date.getDay()} ${date.getMonth()}`;
       }
     }
   })();
@@ -111,7 +111,7 @@ const App = (function() {
   }
 
   const tempControl = function(temp) {
-    return cbuttonEl.classList.contains("active") ? kelvinToCelsius(temp) : kelvinToFahrenheit(temp)
+    return cbuttonEl.classList.contains("active") ? kelvinToCelsius(temp) : kelvinToFahrenheit(temp);
   }
 
   const unitControl = function() {
@@ -119,7 +119,7 @@ const App = (function() {
   }
 
   const getIcon = function(data) {
-    return `<img src="https://openweathermap.org/img/wn/${data}@2x.png" alt="Weather icon">`
+    return `<img src="https://openweathermap.org/img/wn/${data}@2x.png" alt="Weather icon">`;
   }
 
   // Remove loading spinner and show data:
@@ -153,8 +153,8 @@ const App = (function() {
   
   // If server uses HTTPS:
   const setValuesForNavigator = function(data, setForecast) {
-    const { current } = data
-    onSuccesfulLoad()
+    const { current } = data;
+    onSuccesfulLoad();
     currentLocationEl.innerHTML = "Current position".italics();
     currentWeatherEl.innerHTML = `${getIcon(current.weather[0].icon)}${tempControl(current.feels_like)}°${unitControl()}`;
     tempStateEl.textContent = `${current.weather[0].description.toUpperCase()}`;
@@ -170,7 +170,7 @@ const App = (function() {
   const setForecastValues = function(data) {
     forecastItems.forEach((item, index) => {
       let unixToDate = new Date(data.daily[index + 1].dt * 1000);
-      item.children[0].textContent = date.getWeekDay(unixToDate)
+      item.children[0].textContent = date.getWeekDay(unixToDate);
       item.children[1].innerHTML = getIcon(data.daily[index + 1].weather[0].icon);
       item.children[2].textContent = `${kelvinToCelsius(data.daily[index + 1].temp.day)}°${unitControl()}`;
     })
