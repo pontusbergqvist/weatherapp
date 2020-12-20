@@ -79,6 +79,10 @@ body {
   width: 50%;
   font-size: 5rem;
 }
+.temp__display {
+  display: flex;
+  align-items: center;
+}
 .temp__state {
   font-size: 2rem;
   font-family: var(--body-font);
@@ -124,7 +128,7 @@ body {
     rgba(121, 9, 114, 1) 0%,
     rgba(143, 0, 255, 1) 100%
   );
-  border: 1px solid black;
+  border: 1px solid #222;
   border-radius: 4px;
   color: white;
   height: 30px;

@@ -101,6 +101,7 @@ const App = (function() {
     }
   })();
 
+  // Functions for converting and displaying temperature:
   const kelvinToCelsius = function(temp) {
     return Math.round(temp - 273.15);
   }
@@ -135,7 +136,8 @@ const App = (function() {
 
   // Output for the fetched data to document:
 
-  const setValues = function(data, fetchOneCallAPI) {
+  // If server uses HTTP:
+  const setValues = function(data, setForecast) {
     onSuccesfulLoad()
     currentLocationEl.textContent = `${data.name}, ${data.sys.country}`;
     currentWeatherEl.innerHTML = `${getIcon(data.weather[0].icon)}${tempControl(data.main.temp)}°${unitControl()}`;
@@ -146,13 +148,14 @@ const App = (function() {
     rainEl.textContent = `${data.main.humidity}%`;
     sunriseEl.textContent = `${date.getTime(data.sys.sunrise * 1000)}`; // * 1000 to convert from unix timestamp
     sunsetEl.textContent = `${date.getTime(data.sys.sunset * 1000)}`;  // * 1000 to convert from unix timestamp
-    fetchOneCallAPI(data);
+    setForecast(data);
   }
   
-  const setValuesForNavigator = function(data) {
+  // If server uses HTTPS:
+  const setValuesForNavigator = function(data, setForecast) {
     const { current } = data
     onSuccesfulLoad()
-    currentLocationEl.textContent = "Current position";
+    currentLocationEl.innerHTML = "Current position".italics();
     currentWeatherEl.innerHTML = `${getIcon(current.weather[0].icon)}${tempControl(current.feels_like)}°${unitControl()}`;
     tempStateEl.textContent = `${current.weather[0].description.toUpperCase()}`;
     highestTempEl.innerHTML = "Missing data".italics();
@@ -161,7 +164,7 @@ const App = (function() {
     rainEl.textContent = `${current.humidity}`;
     sunriseEl.textContent = `${date.getTime(current.sunrise * 1000)}`; // * 1000 to convert from unix timestamp
     sunsetEl.textContent = `${date.getTime(current.sunset * 1000)}`; // * 1000 to convert from unix timestamp
-    setForecastValues(data);
+    setForecast(data);
   }
   
   const setForecastValues = function(data) {
@@ -200,7 +203,7 @@ const App = (function() {
       const FORECAST_QUERY = `?lat=${latitude}&lon=${longitude}&exclude=minutely,hourly,alerts&appid=${API_KEY_WEATHER}`
       fetch(`${URL_WEATHER_FORECAST}${FORECAST_QUERY}`)
       .then(response => response.json())
-      .then(data => setValuesForNavigator(data))
+      .then(data => setValuesForNavigator(data, setForecastValues()))
     })
   }
 
