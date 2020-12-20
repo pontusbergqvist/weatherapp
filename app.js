@@ -203,7 +203,7 @@ const App = (function() {
       const FORECAST_QUERY = `?lat=${latitude}&lon=${longitude}&exclude=minutely,hourly,alerts&appid=${API_KEY_WEATHER}`;
       fetch(`${URL_WEATHER_FORECAST}${FORECAST_QUERY}`)
       .then(response => response.json())
-      .then(data => setValuesForNavigator(data, fetchWeatherForecast));
+      .then(data => setValuesForNavigator(data, setForecastValues));
     })
   }
 
