@@ -199,11 +199,11 @@ const App = (function() {
   // Fetch One Call API using coords from Navigator.Geolocation API:
   const fetchWeatherWithCoords = function() {
     navigator.geolocation.getCurrentPosition(function(position) {
-      const { latitude, longitude } = position.coords
-      const FORECAST_QUERY = `?lat=${latitude}&lon=${longitude}&exclude=minutely,hourly,alerts&appid=${API_KEY_WEATHER}`
+      const { latitude, longitude } = position.coords;
+      const FORECAST_QUERY = `?lat=${latitude}&lon=${longitude}&exclude=minutely,hourly,alerts&appid=${API_KEY_WEATHER}`;
       fetch(`${URL_WEATHER_FORECAST}${FORECAST_QUERY}`)
       .then(response => response.json())
-      .then(data => setValuesForNavigator(data, setForecastValues()))
+      .then(data => setValuesForNavigator(data, fetchWeatherForecast));
     })
   }
 
@@ -211,15 +211,15 @@ const App = (function() {
 
   const fetchEvent = function(event) {
     if (event.key === "Enter") {
-      initiateSpinner()
+      initiateSpinner();
       fetchWeather();
     }
   }
   
   const setListeners = function() {
     buttonEl.addEventListener("click", function() {
-      initiateSpinner()
-      fetchWeather()
+      initiateSpinner();
+      fetchWeather();
     })
     inputEl.addEventListener("keypress", fetchEvent);
     fbuttonEl.addEventListener("click", function() {
