@@ -36,7 +36,7 @@ const App = (function() {
         return inputEl.value;
       },
       resetLocation() { 
-        inputEl.value = "";
+        inputEl.value = ""
       }, 
       getDefaultLocation() {
         return "Mölnlycke"
@@ -158,8 +158,8 @@ const App = (function() {
     currentLocationEl.innerHTML = "Current position".italics();
     currentWeatherEl.innerHTML = `${getIcon(current.weather[0].icon)}${tempControl(current.feels_like)}°${unitControl()}`;
     tempStateEl.textContent = `${current.weather[0].description.toUpperCase()}`;
-    highestTempEl.innerHTML = "Missing data".italics();
-    lowestTempEl.innerHTML = "Missing data".italics();
+    highestTempEl.innerHTML = "No data".italics();
+    lowestTempEl.innerHTML = "No data".italics();
     windspeedEl.textContent = `${current.wind_speed}mph`;
     rainEl.textContent = `${current.humidity}`;
     sunriseEl.textContent = `${date.getTime(current.sunrise * 1000)}`; // * 1000 to convert from unix timestamp
@@ -179,8 +179,8 @@ const App = (function() {
   // API call functions:
 
   // Current Weather Data API:
-  const fetchWeather = function(loc = locationObj.getDefaultLocation) {
-    fetch(`${URL_WEATHER}${loc()}`)
+  const fetchWeather = function(loc = locationObj.getDefaultLocation()) {
+    fetch(`${URL_WEATHER}${loc}`)
     .then(response => response.json())
     .then(data => setValues(data, fetchWeatherForecast))
     .catch(err => alert("Location not found, try again :)"))
@@ -204,7 +204,10 @@ const App = (function() {
       fetch(`${URL_WEATHER_FORECAST}${FORECAST_QUERY}`)
       .then(response => response.json())
       .then(data => setValuesForNavigator(data, setForecastValues))
-      .catch(err => fetchWeather());
+    }, 
+    // Second callback that runs if geolocation prompt is declined:
+    function(){
+      fetchWeather();
     })
   }
 
@@ -213,14 +216,14 @@ const App = (function() {
   const fetchEvent = function(event) {
     if (event.key === "Enter") {
       initiateSpinner();
-      fetchWeather();
+      fetchWeather(locationObj.getLocation());
     }
   }
   
   const setListeners = function() {
     buttonEl.addEventListener("click", function() {
       initiateSpinner();
-      fetchWeather();
+      fetchWeather(locationObj.getLocation());
     })
     inputEl.addEventListener("keypress", fetchEvent);
     fbuttonEl.addEventListener("click", function() {
@@ -239,7 +242,7 @@ const App = (function() {
     setListeners();
     dateEl.textContent = date.displayDate();
     
-    // If server uses HTTPS, use Navigator API to fetch coords and use coords to fetch all displayed data from One Call API:
+    // If server uses HTTPS, use Navigator API to fetch coords and use coords to fetch all displayed data from One Call API (One Call API has no data for lowest and highest):
     location.protocol === "https:" ? fetchWeatherWithCoords() : fetchWeather();
   }
 
