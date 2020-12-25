@@ -179,7 +179,7 @@ const App = (function() {
   // API call functions:
 
   // Current Weather Data API:
-  const fetchWeather = function(loc = locationObj.getLocation) {
+  const fetchWeather = function(loc = locationObj.getDefaultLocation) {
     fetch(`${URL_WEATHER}${loc()}`)
     .then(response => response.json())
     .then(data => setValues(data, fetchWeatherForecast))
