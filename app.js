@@ -205,7 +205,10 @@ const App = (function() {
       fetch(`${URL_WEATHER_FORECAST}${FORECAST_QUERY}`)
       .then(response => response.json())
       .then(data => setValuesForNavigator(data, setForecastValues))
-    }, fetchWeather())
+    }, function() {
+      initiateSpinner();
+      fetchWeather();
+    })
   }
 
   // Event listeners: 
