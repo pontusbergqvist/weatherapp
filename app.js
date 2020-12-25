@@ -197,6 +197,7 @@ const App = (function() {
   }
 
   // Fetch One Call API using coords from Navigator.Geolocation API:
+  // If the user declines the geolocation prompt, fetchWeather runs instead
   const fetchWeatherWithCoords = function() {
     navigator.geolocation.getCurrentPosition(function(position) {
       const { latitude, longitude } = position.coords;
@@ -204,11 +205,7 @@ const App = (function() {
       fetch(`${URL_WEATHER_FORECAST}${FORECAST_QUERY}`)
       .then(response => response.json())
       .then(data => setValuesForNavigator(data, setForecastValues))
-    }, 
-    // Second callback that runs if geolocation prompt is declined:
-    function(){
-      fetchWeather();
-    })
+    }, fetchWeather)
   }
 
   // Event listeners: 
