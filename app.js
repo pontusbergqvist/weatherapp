@@ -203,7 +203,8 @@ const App = (function() {
       const FORECAST_QUERY = `?lat=${latitude}&lon=${longitude}&exclude=minutely,hourly,alerts&appid=${API_KEY_WEATHER}`;
       fetch(`${URL_WEATHER_FORECAST}${FORECAST_QUERY}`)
       .then(response => response.json())
-      .then(data => setValuesForNavigator(data, setForecastValues));
+      .then(data => setValuesForNavigator(data, setForecastValues))
+      .catch(err => fetchWeather());
     })
   }
 
@@ -239,7 +240,7 @@ const App = (function() {
     dateEl.textContent = date.displayDate();
     
     // If server uses HTTPS, use Navigator API to fetch coords and use coords to fetch all displayed data from One Call API:
-    location.protocol === "https:" ? fetchWeatherWithCoords() : fetchWeather(locationObj.getDefaultLocation);
+    location.protocol === "https:" ? fetchWeatherWithCoords() : fetchWeather();
   }
 
   return {
