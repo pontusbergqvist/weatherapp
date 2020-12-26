@@ -133,7 +133,7 @@ body {
   color: white;
   height: 30px;
   width: 30px;
-  /* margin: 0 0.5rem; */
+  cursor: pointer;
 }
 .c-temp:focus,
 .f-temp:focus {
