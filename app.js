@@ -172,7 +172,7 @@ const App = (function() {
       let unixToDate = new Date(data.daily[index + 1].dt * 1000);
       item.children[0].textContent = date.getWeekDay(unixToDate);
       item.children[1].innerHTML = getIcon(data.daily[index + 1].weather[0].icon);
-      item.children[2].textContent = `${kelvinToCelsius(data.daily[index + 1].temp.day)}°${unitControl()}`;
+      item.children[2].textContent = `${tempControl(data.daily[index + 1].temp.day)}°${unitControl()}`;
     })
   }
 
